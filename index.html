@@ -1,13 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>HTML + CSS</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <h1>This is a simple HTML + CSS template!</h1>
-  </body>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Animation defined in glTF model</title>
+    <script type='text/javascript' charset="UTF-8" src='https://x3dom.org/release/x3dom-full.js'> </script>         
+    <link rel='stylesheet' type='text/css' href='https://x3dom.org/release/x3dom.css'></link> </head>
+<body>
+<script>
+    
+    function find_timesensor(){
+        var x3delement = document.querySelector('#x3dElement');
+        var timesensors = x3delement.querySelectorAll("timesensor");        
+        var timesensor = timesensors[0];
+        return timesensor;
+    }
+
+
+    function initialize_timesensor(  )
+    {
+        console.log("initializing timesensor");
+        var timesensor= find_timesensor();
+        if (timesensor)
+        {
+            timesensor.setAttribute("enabled", "false");
+        }
+        else
+        {   
+            console.warn("timesensor not found");
+        }
+    };
+   
+    function attach_loaded_listener()
+    {
+        inlineNode = document.querySelector('#inline_scene');
+        if (inlineNode)
+        {
+            console.log("attaching initialize_timesensor");
+            inlineNode.addEventListener("load", initialize_timesensor); 
+        }
+        else
+        {
+            console.warn("#inline_scene not found");
+        }
+    };
+ 
+    
+        
+
+
+</script>
+
+<x3d id="x3dElement" width='640px' height='640px'>
+    <scene>
+
+<Viewpoint position="867.06094 282.33466 326.61371" orientation="-0.16026 0.98604 0.04506 1.15978" 
+	zNear="359.45879" zFar="1606.10328" centerOfRotation="-58.84014 -17.85852 116.32497" fieldOfView="0.85000" 
+	description="defaultX3DViewpointNode"></Viewpoint>
+ 
+        <inline id="inline_scene" 
+                    nameSpaceName='inline' 
+                    mapDEFToID="true" 
+                    url="https://spri-open-resources.s3.us-east-2.amazonaws.com/iiif3dtsg/bike/scene.gltf"
+                    onload="initialize_timesensor()"> </inline>
+    </scene>
+</x3d>
+
+<input  type="checkbox"  id="headlight-on-checkbox">Run Animation</input>
+
+<script>
+    //attach_loaded_listener();
+       
+    function animation_clicked(event) {  
+    
+        console.log("Entering animation_clicked")  ;  
+         
+        var x3delement = document.querySelector('#x3dElement');
+        var timesensors = x3delement.querySelectorAll("timesensor");        
+        var timesensor = timesensors[0];
+        var headlight_on_checkbox = document.getElementById("headlight-on-checkbox");
+        
+        if ( timesensor && headlight_on_checkbox)
+        {
+            console.log("timesensor " + timesensor.outerHTML);
+            console.log("checkbox state " + headlight_on_checkbox.checked);
+            timesensor.setAttribute("enabled", headlight_on_checkbox.checked);
+        }
+        else
+        {
+            console.error("required elements not found");
+        }
+     }
+    
+  let headlight_on_checkbox = document.getElementById("headlight-on-checkbox");
+  headlight_on_checkbox.checked = false;
+  headlight_on_checkbox.addEventListener("click", animation_clicked);    
+
+</script>
+
+</body>
 </html>
